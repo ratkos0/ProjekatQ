@@ -6,6 +6,14 @@ import pyfiglet
 naziv = pyfiglet.figlet_format("Projekat Ratko")
 
 
+class Author:
+    def __init__(self, ime, prezime, tema):
+        self.ime = ime
+        self.prezime = prezime
+        self.tema = tema
+    def __str__(self):
+        return "Projekat pravio "+ self.ime +" "+ self.prezime +", na temu "+ self.tema
+
 def menu():
     print(naziv)
     print('Dobrodosli u pocetni meni, za odabir funkcije unesite samo njen redni broj.')
@@ -130,4 +138,7 @@ def base_select():
     time.sleep(4)
     return menu()
 
+d1 = Author("Ratko", "Sopic", "Automobili")
+print(d1)
+time.sleep(4)
 menu()
