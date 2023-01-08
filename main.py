@@ -1,7 +1,9 @@
+#Uvoz potrebnih paketa
 import sqlite3
 import time
 import os
 
+#Postavka PYFIGLET paketa
 import pyfiglet
 naziv = pyfiglet.figlet_format("Projekat Ratko")
 
@@ -79,6 +81,12 @@ def create_base():
             Grijanje_sjedista VARCHAR(2),\
             Panorama VARCHAR(2));"""
     cursor.execute(sql_command1)
+    sql_command3 = """CREATE TABLE info(\
+            id INTEGER PRIMARY KEY,\
+            Boja VARCHAR(15),\
+            Ostecenja VARCHAR(2),\
+            Korozija VARCHAR(2));"""
+    cursor.execute(sql_command3)
     connection.close()
     return menu()
 
@@ -98,14 +106,20 @@ def base_insert():
     engine = float(input('Unesite motor automobila'))
     hp = int(input('Unesite broj konjskih snaga automobila'))
     # Podatci za dodatnu opremu automobila
-    park_sens = input("Da li automobil ima parking senzore?")
-    alu_felge = input("Da li automobil ima aluminijske feluge?")
-    air_con = input("Da li automobil ima klimu?")
-    rev_camera = input("Da li automobil ima Rikverc kameru?")
-    heat_seat = input("Da li automobil ima grijanje u sjedistima?")
-    panor = input("Da li automobil ima panoramu?")
+    park_sens = input("Da li automobil ima parking senzore? Da/Ne")
+    alu_felge = input("Da li automobil ima aluminijske feluge? Da/Ne")
+    air_con = input("Da li automobil ima klimu? Da/Ne")
+    rev_camera = input("Da li automobil ima Rikverc kameru? Da/Ne")
+    heat_seat = input("Da li automobil ima grijanje u sjedistima? Da/Ne")
+    panor = input("Da li automobil ima panoramu? Da/Ne")
+    #Podatci za listu info
+    carcolor = input('Unesite boju automobila.')
+    cardamage = input('Jel auto nekada bilo havarisano? Da/Ne')
+    carcorosion = input('Ima li korozije na autu? Da/Ne')
     addons_list = [(identif, park_sens, alu_felge,
                     air_con, rev_camera, heat_seat, panor)]
+
+    infolist = [(identif, carcolor, cardamage, carcorosion)]
 
     list = [(identif, name, model, type, car_door, engine, hp)]
     connection.executemany("""INSERT INTO auto(id, Naziv, Model,Tip, Broj_vrata, Motor, Konjskih_snaga) VALUES (?,?,?,?,?,?,?)""",
@@ -115,6 +129,7 @@ def base_insert():
         """INSERT INTO vozac(id, Ime, Prezime, Godine) VALUES (?,?,?,?)""", vozac_list)
     connection.executemany(
         """INSERT INTO dodatna_oprema(id, Parking_Senzori, Alu_Felge, Klima, Rikverc_Kamera, Grijanje_sjedista, Panorama) VALUES (?,?,?,?,?,?,?)""", addons_list)
+    connection.executemany("""INSERT INTO info(id, Boja, Ostecenja, Korozija) VALUES (?,?,?,?)""", infolist)
     connection.commit()
     connection.close()
     return menu()
@@ -137,18 +152,15 @@ def base_delete():
 
 
 def base_select():
+    #Uzima sve podatke iz baze i ispisuje ih
     connection = sqlite3.connect('projekat.db')
     cursor = connection.cursor()
-    cursor.execute("SELECT * FROM auto")
+    cursor.execute("SELECT * FROM auto, dodatna_oprema, info")
     ans = cursor.fetchall()
-    cursor.execute("SELECT * FROM dodatna_oprema")
-    opr = cursor.fetchall()
     for i in ans:
         print(i)
-    for a in opr:
-        print(a)
-    time.sleep(4)
-    return menu()
+        time.sleep(4)
+        return menu()
 
 
 d1 = Author("Ratko", "Sopic", "Automobili")
