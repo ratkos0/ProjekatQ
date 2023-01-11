@@ -23,7 +23,7 @@ def menu():
     print(naziv)
     print('Dobrodosli u pocetni meni, za odabir funkcije unesite samo njen redni broj.')
     menu_input = input(
-        "1.Instaliranje paketa\n2.Meni\n3.Kreiranje baze podataka\n4.Unos u bazu\n5.Brisanje iz baze\n6.Listanje iz baze\n")
+        "1.Instaliranje paketa\n2.Meni\n3.Kreiranje baze podataka\n4.Unos u bazu\n5.Brisanje iz baze\n6.Listanje iz baze\n7.Azuriranje baze")
     if menu_input == "1":
         install_data()
         menu()
@@ -41,6 +41,8 @@ def menu():
         base_delete()
     elif menu_input == "6":
         base_select()
+    elif menu_input == "7":
+        base_update()
 
 
 def install_data():
@@ -161,6 +163,21 @@ def base_select():
         print(i)
         time.sleep(4)
         return menu()
+
+def base_update():
+    #Azurira podatke vozaca u bazi
+    xupdate = input('Sta zelite da azurirate, \n1.Ime\n2.Prezime\n3.Godine')
+    if xupdate == '1':
+        try:
+            nameupdate = input('Koje ime zelite da unesete?')
+            idupdate = int(input('Koji je Vas ID?'))
+            updatelist = [(nameupdate, idupdate)]
+            connection = sqlite3.connect('projekat.db')
+            cursor = connection.cursor()
+            cursor.executemany("""UPDATE vozac SET username=? WHERE id=?""", updatelist)       
+        except:
+            print('Greska')
+    pass
 
 
 d1 = Author("Ratko", "Sopic", "Automobili")
