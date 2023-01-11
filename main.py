@@ -157,27 +157,47 @@ def base_select():
     #Uzima sve podatke iz baze i ispisuje ih
     connection = sqlite3.connect('projekat.db')
     cursor = connection.cursor()
-    cursor.execute("SELECT * FROM auto, dodatna_oprema, info")
+    cursor.execute("SELECT * FROM vozac, auto, dodatna_oprema, info")
     ans = cursor.fetchall()
     for i in ans:
         print(i)
-        time.sleep(4)
+        #Pet sekundi pauze do ucitavanja menija
+        time.sleep(5)
         return menu()
 
 def base_update():
     #Azurira podatke vozaca u bazi
     xupdate = input('Sta zelite da azurirate, \n1.Ime\n2.Prezime\n3.Godine')
     if xupdate == '1':
-        try:
-            nameupdate = input('Koje ime zelite da unesete?')
-            idupdate = int(input('Koji je Vas ID?'))
-            updatelist = [(nameupdate, idupdate)]
-            connection = sqlite3.connect('projekat.db')
-            cursor = connection.cursor()
-            cursor.executemany("""UPDATE vozac SET username=? WHERE id=?""", updatelist)       
-        except:
-            print('Greska')
-    pass
+        nameupdate = input('Koje ime zelite da unesete?')
+        idupdate = int(input('Koji je Vas ID?'))
+        updatelist = [(nameupdate, idupdate)]
+        connection = sqlite3.connect('projekat.db')
+        cursor = connection.cursor()
+        cursor.executemany("""UPDATE vozac SET Ime=? WHERE id=?""", updatelist)
+        connection.commit()
+        connection.close()
+        return menu()
+    elif xupdate == '2':
+        surnameupdate = input('Unesite novo prezime')
+        idupdate = int(input('Koji je Vas ID?'))
+        updatelist = [(surnameupdate, idupdate)]
+        connection = sqlite3.connect('projekat.db')
+        cursor = connection.cursor()
+        cursor.executemany("""UPDATE vozac SET Prezime=? WHERE id=?""", updatelist)
+        connection.commit()
+        connection.close()
+        return menu()
+    elif xupdate == '3':
+        ageupdate = input('Unesite nove godine')
+        idupdate = int(input('Koji je Vas ID?'))
+        updatelist = [(ageupdate, idupdate)]
+        connection = sqlite3.connect('projekat.db')
+        cursor = connection.cursor()
+        cursor.executemany("""UPDATE vozac SET Godine=? WHERE id=?""", updatelist)
+        connection.commit()
+        connection.close()
+        return menu()
 
 
 d1 = Author("Ratko", "Sopic", "Automobili")
